@@ -1,0 +1,14 @@
+{
+  "id": "session-1794167011194",
+  "startedAt": "2026-11-08T19:43:31.194Z",
+  "cwd": "/Users/tduba/dev/cadathon-2026",
+  "context": {},
+  "metrics": {
+    "edits": 0,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "endedAt": "2026-11-08T20:17:22.407Z",
+  "duration": 2031217
+}
