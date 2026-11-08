@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -48,8 +47,6 @@ public class RobotContainer {
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
-    private final CommandPS4Controller controller2 = new CommandPS4Controller(1);
-
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -120,7 +117,6 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureXboxBindings();
-        configurePS4Bindings();
     }
 
     /**
@@ -147,27 +143,6 @@ public class RobotContainer {
                 ? () -> drive.resetOdometry(driveSimulation.getSimulatedDriveTrainPose())
                 : () -> drive.resetOdometry(new Pose2d(drive.getPose().getTranslation(), new Rotation2d()));
         controller.start().onTrue(Commands.runOnce(resetOdometry).ignoringDisable(true));
-    }
-
-    private void configurePS4Bindings() {
-        // Default command, normal field-relative drive
-        drive.setDefaultCommand(DriveCommands.joystickDrive(
-                drive, () -> -controller2.getLeftY(), () -> -controller2.getLeftX(), () -> -controller2.getRightX()));
-
-        // Lock to 0° when A button is held
-        controller2
-                .square()
-                .whileTrue(DriveCommands.joystickDriveAtAngle(
-                        drive, () -> -controller2.getLeftY(), () -> -controller2.getLeftX(), () -> new Rotation2d()));
-
-        // Switch to X pattern when X button is pressed
-        controller2.cross().onTrue(Commands.runOnce(drive::swerveLock, drive));
-
-        // Reset gyro / odometry
-        final Runnable resetOdometry = Constants.currentMode == Constants.Mode.SIM
-                ? () -> drive.resetOdometry(driveSimulation.getSimulatedDriveTrainPose())
-                : () -> drive.resetOdometry(new Pose2d(drive.getPose().getTranslation(), new Rotation2d()));
-        controller2.options().onTrue(Commands.runOnce(resetOdometry).ignoringDisable(true));
     }
 
     /**
